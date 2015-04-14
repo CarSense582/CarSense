@@ -57,418 +57,63 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:padding="20dp" >
 
-        <RelativeLayout
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:paddingBottom="20dp"
-            android:paddingLeft="20dp"
-            android:paddingTop="20dp" >
-
-            <TextView
-                android:id="@+id/digitalOut"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/digitalOut" />
-        </RelativeLayout>
+            android:text="@string/serRx" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="horizontal" >
 
-            <LinearLayout
-                android:id="@+id/linearLayout01"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical" >
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" >
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:text="@string/Pin"
-                        android:textColor="@android:color/holo_blue_dark" />
-                </RelativeLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="@string/pinValue4"
-                    android:textColor="@android:color/holo_blue_dark" />
-            </LinearLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="@string/write"
-                    android:textColor="@android:color/holo_blue_dark"
-                    android:textSize="12sp" />
-            </RelativeLayout>
-        </LinearLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:padding="15dp" >
-
-            <ToggleButton
-                android:id="@+id/DOutBtn"
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:background="@drawable/btn_toggle_bg"
-                android:checked="false"
-                android:enabled="false"
-                android:textOff=""
-                android:textOn="" />
-        </RelativeLayout>
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:orientation="horizontal" >
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:paddingBottom="20dp"
-            android:paddingLeft="20dp"
-            android:paddingTop="20dp" >
-
-            <TextView
-                android:id="@+id/digitalIn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/digitalIn" />
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal" >
+                android:layout_weight="1"
+                android:text="" />
 
             <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="@string/pinValue5"
-                    android:textColor="@android:color/holo_blue_dark" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="@string/read"
-                    android:textColor="@android:color/holo_blue_dark"
-                    android:textSize="12sp" />
-            </RelativeLayout>
-        </LinearLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:padding="15dp" >
-
-            <ToggleButton
-                android:id="@+id/DIntBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:background="@drawable/btn_toggle_bg"
-                android:checked="false"
-                android:enabled="false"
-                android:textOff=""
-                android:textOn="" />
-        </RelativeLayout>
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:orientation="horizontal" >
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:paddingBottom="20dp"
-            android:paddingLeft="20dp"
-            android:paddingTop="20dp" >
-
-            <TextView
-                android:id="@+id/PWM"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/PWM" />
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal" >
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
                 android:layout_weight="1" >
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="@string/pinValue6"
-                    android:textColor="@android:color/holo_blue_dark" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="@string/write"
-                    android:textColor="@android:color/holo_blue_dark"
-                    android:textSize="12sp" />
-            </RelativeLayout>
-        </LinearLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:padding="15dp" >
-
-            <SeekBar
-                android:id="@+id/PWMSeekBar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:enabled="false"
-                android:progressDrawable="@drawable/seekbar_style" />
-        </RelativeLayout>
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:orientation="horizontal" >
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:paddingBottom="20dp"
-            android:paddingLeft="20dp"
-            android:paddingTop="20dp" >
-
-            <TextView
-                android:id="@+id/Servo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/Servo" />
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal" >
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="@string/pinValue7"
-                    android:textColor="@android:color/holo_blue_dark" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="@string/write"
-                    android:textColor="@android:color/holo_blue_dark"
-                    android:textSize="12sp" />
-            </RelativeLayout>
-        </LinearLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:padding="15dp" >
-
-            <SeekBar
-                android:id="@+id/ServoSeekBar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:enabled="false"
-                android:progressDrawable="@drawable/seekbar_style" />
-        </RelativeLayout>
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:orientation="horizontal" >
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:paddingBottom="30dp"
-            android:paddingLeft="20dp"
-            android:paddingTop="30dp" >
-
-            <TextView
-                android:id="@+id/AnalogIn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/AnalogIn" />
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal" >
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="@string/pinValueA5"
-                    android:textColor="@android:color/holo_blue_dark" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="@string/read"
-                    android:textColor="@android:color/holo_blue_dark"
-                    android:textSize="12sp" />
-            </RelativeLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical" >
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:paddingTop="20dp" >
-
-                <ToggleButton
-                    android:id="@+id/AnalogInBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/btn_toggle_bg"
-                    android:layout_centerHorizontal="true"
-                    android:checked="false"
-                    android:enabled="false"
-                    android:textOff=""
-                    android:textOn="" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="2" >
-
-                <TextView
-                    android:id="@+id/AIText"
+                    android:id="@+id/serRxValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:text="@string/AIText" />
+                    android:text="@string/serRxValue" />
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
 
     <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:orientation="horizontal" >
+        <EditText android:id="@+id/serTxValue"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/serTxHint" />
+        <Button android:id="@+id/serTxBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/serTxBtnTxt" />
+    </LinearLayout>
+
+      <TextView
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@android:color/darker_gray" />

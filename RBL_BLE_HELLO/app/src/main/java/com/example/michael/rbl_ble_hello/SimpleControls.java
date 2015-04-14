@@ -27,6 +27,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -37,10 +38,10 @@ public class SimpleControls extends Activity {
     private final static String TAG = SimpleControls.class.getSimpleName();
 
     private Button connectBtn = null;
+    private Button serTxBtn = null;
     private TextView rssiValue = null;
-    private TextView AnalogInValue = null;
-    private ToggleButton digitalOutBtn, digitalInBtn, AnalogInBtn;
-    private SeekBar servoSeekBar, PWMSeekBar;
+    private TextView serRxValue = null;
+    private EditText serTxValue = null;
 
     private BluetoothGattCharacteristic characteristicTx = null;
     private RBLService mBluetoothLeService;
@@ -113,9 +114,9 @@ public class SimpleControls extends Activity {
 
         rssiValue = (TextView) findViewById(R.id.rssiValue);
 
-        AnalogInValue = (TextView) findViewById(R.id.AIText);
-
-        digitalInBtn = (ToggleButton) findViewById(R.id.DIntBtn);
+        serRxValue = (TextView) findViewById(R.id.serRxValue);
+        serTxBtn = (Button) findViewById(R.id.serTxBtn);
+        serTxValue = (EditText) findViewById(R.id.serTxValue);
 
         connectBtn = (Button) findViewById(R.id.connect);
         connectBtn.setOnClickListener(new OnClickListener() {
@@ -162,91 +163,14 @@ public class SimpleControls extends Activity {
             }
         });
 
-        digitalOutBtn = (ToggleButton) findViewById(R.id.DOutBtn);
-        digitalOutBtn.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView,
-                                         boolean isChecked) {
-                byte buf[] = new byte[] { (byte) 0x01, (byte) 0x00, (byte) 0x00 };
-
-                if (isChecked == true)
-                    buf[1] = 0x01;
-                else
-                    buf[1] = 0x00;
-
-                characteristicTx.setValue(buf);
-                mBluetoothLeService.writeCharacteristic(characteristicTx);
-            }
-        });
-
-        AnalogInBtn = (ToggleButton) findViewById(R.id.AnalogInBtn);
-        AnalogInBtn.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView,
-                                         boolean isChecked) {
-                byte[] buf = new byte[] { (byte) 0xA0, (byte) 0x00, (byte) 0x00 };
-
-                if (isChecked == true)
-                    buf[1] = 0x01;
-                else
-                    buf[1] = 0x00;
-
-                characteristicTx.setValue(buf);
-                mBluetoothLeService.writeCharacteristic(characteristicTx);
-            }
-        });
-
-        servoSeekBar = (SeekBar) findViewById(R.id.ServoSeekBar);
-        servoSeekBar.setEnabled(false);
-        servoSeekBar.setMax(180);
-        servoSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress,
-                                          boolean fromUser) {
-                byte[] buf = new byte[] { (byte) 0x03, (byte) 0x00, (byte) 0x00 };
-
-                buf[1] = (byte) servoSeekBar.getProgress();
-
-                characteristicTx.setValue(buf);
-                mBluetoothLeService.writeCharacteristic(characteristicTx);
-            }
-        });
-
-        PWMSeekBar = (SeekBar) findViewById(R.id.PWMSeekBar);
-        PWMSeekBar.setEnabled(false);
-        PWMSeekBar.setMax(255);
-        PWMSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress,
-                                          boolean fromUser) {
-                byte[] buf = new byte[] { (byte) 0x02, (byte) 0x00, (byte) 0x00 };
-
-                buf[1] = (byte) PWMSeekBar.getProgress();
-
+        serTxBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Perform action on click
+                String s = serTxValue.getText().toString();
+                byte[] buf = new byte[s.length()];
+                for(int i = 0; i < s.length(); ++i) {
+                    buf[i] = (byte) s.charAt(i);
+                }
                 characteristicTx.setValue(buf);
                 mBluetoothLeService.writeCharacteristic(characteristicTx);
             }
@@ -293,31 +217,19 @@ public class SimpleControls extends Activity {
     }
 
     private void readAnalogInValue(byte[] data) {
-        for (int i = 0; i < data.length; i += 3) {
-            if (data[i] == 0x0A) {
-                if (data[i + 1] == 0x01)
-                    digitalInBtn.setChecked(false);
-                else
-                    digitalInBtn.setChecked(true);
-            } else if (data[i] == 0x0B) {
-                int Value;
-
-                Value = ((data[i + 1] << 8) & 0x0000ff00)
-                        | (data[i + 2] & 0x000000ff);
-
-                AnalogInValue.setText(Value + "");
-            }
+        char [] arr = new char[data.length+1];
+        for (int i = 0; i < data.length; ++i) {
+            arr[i] = (char) data[i];
         }
+        arr[data.length] = '\0';
+        System.out.println(arr);
+        serRxValue.setText(arr,0,arr.length);
     }
 
     private void setButtonEnable() {
         flag = true;
         connState = true;
 
-        digitalOutBtn.setEnabled(flag);
-        AnalogInBtn.setEnabled(flag);
-        servoSeekBar.setEnabled(flag);
-        PWMSeekBar.setEnabled(flag);
         connectBtn.setText("Disconnect");
     }
 
@@ -325,10 +237,6 @@ public class SimpleControls extends Activity {
         flag = false;
         connState = false;
 
-        digitalOutBtn.setEnabled(flag);
-        AnalogInBtn.setEnabled(flag);
-        servoSeekBar.setEnabled(flag);
-        PWMSeekBar.setEnabled(flag);
         connectBtn.setText("Connect");
     }
 

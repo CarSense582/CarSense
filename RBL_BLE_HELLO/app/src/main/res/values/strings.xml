@@ -5,6 +5,10 @@
     <string name="action_settings">Settings</string>
     <string name="Rssi">RSSI</string>
     <string name="rssiValue">---</string>
+    <string name="serRx">SER RX</string>
+    <string name="serRxValue">---</string>
+    <string name="serTxBtnTxt">Send</string>
+    <string name="serTxHint">Message</string>
     <string name="digitalOut">Digital Out</string>
     <string name="digitalIn">Digital In</string>
     <string name="Pin">Pin</string>
