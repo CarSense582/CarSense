@@ -57,6 +57,10 @@ public class RBLService extends Service {
             .fromString(RBLGattAttributes.BLE_SHIELD_RX);
     public final static UUID UUID_BLE_SHIELD_SERVICE = UUID
             .fromString(RBLGattAttributes.BLE_SHIELD_SERVICE);
+    public final static UUID UUID_FREEMATICS_SERVICE = UUID
+            .fromString(RBLGattAttributes.BLE_FREEMATICS_SERVICE);
+    public final static UUID UUID_FREEMATICS_CHARACTERISTIC = UUID
+            .fromString(RBLGattAttributes.BLE_FREEMATICS_CHARACTERISTIC);
 
     private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
         @Override
@@ -312,7 +316,7 @@ public class RBLService extends Service {
         }
         mBluetoothGatt.setCharacteristicNotification(characteristic, enabled);
 
-        if (UUID_BLE_SHIELD_RX.equals(characteristic.getUuid())) {
+        if (UUID_BLE_SHIELD_RX.equals(characteristic.getUuid()) || UUID_FREEMATICS_CHARACTERISTIC.equals(characteristic.getUuid())) {
             BluetoothGattDescriptor descriptor = characteristic
                     .getDescriptor(UUID
                             .fromString(RBLGattAttributes.CLIENT_CHARACTERISTIC_CONFIG));
@@ -327,5 +331,22 @@ public class RBLService extends Service {
             return null;
 
         return mBluetoothGatt.getService(UUID_BLE_SHIELD_SERVICE);
+    }
+
+    public BluetoothGattService getFreematicsGattService() {
+        if (mBluetoothGatt == null)
+            return null;
+
+        for (BluetoothGattService s : mBluetoothGatt.getServices()) {
+            Log.v(TAG, "Service found: " + s.getUuid());
+        }
+        Log.v(TAG, "Getting service: " + UUID_FREEMATICS_SERVICE);
+        BluetoothGattService service = mBluetoothGatt.getService(UUID_FREEMATICS_SERVICE);
+
+        if (service == null) {
+            Log.v(TAG, "Failed to get service");
+        }
+
+        return service;
     }
 }

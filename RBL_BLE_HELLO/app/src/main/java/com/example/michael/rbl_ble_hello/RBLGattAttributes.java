@@ -27,6 +27,8 @@ public class RBLGattAttributes {
     public static String BLE_SHIELD_TX = "713d0003-503e-4c75-ba94-3148f18d941e";
     public static String BLE_SHIELD_RX = "713d0002-503e-4c75-ba94-3148f18d941e";
     public static String BLE_SHIELD_SERVICE = "713d0000-503e-4c75-ba94-3148f18d941e";
+    public static String BLE_FREEMATICS_SERVICE = "0000ffe0-0000-1000-8000-00805f9b34fb";
+    public static String BLE_FREEMATICS_CHARACTERISTIC = "0000ffe1-0000-1000-8000-00805f9b34fb";
 
     static {
         // RBL Services.
@@ -35,6 +37,8 @@ public class RBLGattAttributes {
         // RBL Characteristics.
         attributes.put(BLE_SHIELD_TX, "BLE Shield TX");
         attributes.put(BLE_SHIELD_RX, "BLE Shield RX");
+        attributes.put(BLE_FREEMATICS_SERVICE, "Freematics BLE Service");
+        attributes.put(BLE_FREEMATICS_CHARACTERISTIC, "Freematics BLE Characteristic");
     }
 
     public static String lookup(String uuid, String defaultName) {
