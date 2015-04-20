@@ -52,6 +52,11 @@ public class SimpleControls extends Activity {
     private boolean flag = true;
     private boolean connState = false;
     private boolean scanFlag = false;
+    private char[] rxBuf = new char[100];
+    private int rxPos    = 0;
+    private boolean rxTxnProgress = false;
+    final private char START_CHAR = '>';
+    final private char END_CHAR   = '\n';
 
     private byte[] data = new byte[3];
     private static final int REQUEST_ENABLE_BT = 1;
@@ -217,13 +222,30 @@ public class SimpleControls extends Activity {
     }
 
     private void readAnalogInValue(byte[] data) {
+
         char [] arr = new char[data.length+1];
         for (int i = 0; i < data.length; ++i) {
-            arr[i] = (char) data[i];
+            char c = (char) data[i];
+            arr[i] = c;
+            if(rxTxnProgress == false) {
+                if(c == START_CHAR) {
+                    rxPos = 0;
+                    rxTxnProgress = true;
+                    continue;
+                }
+            } else {
+                if(c == END_CHAR) {
+                    rxBuf[rxPos] = '\0';
+                    serRxValue.setText(rxBuf,0,rxPos);
+                    System.out.println(rxBuf);
+                    //Restart txn
+                    rxPos = 0;
+                    rxTxnProgress = false;
+                } else {
+                    rxBuf[rxPos++] = c;
+                }
+            }
         }
-        arr[data.length] = '\0';
-        System.out.println(arr);
-        serRxValue.setText(arr,0,arr.length);
     }
 
     private void setButtonEnable() {
