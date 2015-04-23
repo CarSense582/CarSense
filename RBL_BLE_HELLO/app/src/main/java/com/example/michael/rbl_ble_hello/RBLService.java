@@ -133,7 +133,7 @@ public class RBLService extends Service {
         // parsing is
         // carried out as per profile specifications:
         // http://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.heart_rate_measurement.xml
-        if (UUID_BLE_SHIELD_RX.equals(characteristic.getUuid())) {
+        if (UUID_BLE_SHIELD_RX.equals(characteristic.getUuid()) || UUID_FREEMATICS_CHARACTERISTIC.equals(characteristic.getUuid())) {
             final byte[] rx = characteristic.getValue();
             intent.putExtra(EXTRA_DATA, rx);
         }
@@ -334,8 +334,10 @@ public class RBLService extends Service {
     }
 
     public BluetoothGattService getFreematicsGattService() {
-        if (mBluetoothGatt == null)
+        if (mBluetoothGatt == null) {
+            Log.v(TAG, "Gatt is null");
             return null;
+        }
 
         for (BluetoothGattService s : mBluetoothGatt.getServices()) {
             Log.v(TAG, "Service found: " + s.getUuid());

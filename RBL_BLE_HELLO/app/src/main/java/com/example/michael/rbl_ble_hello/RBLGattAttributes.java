@@ -29,6 +29,7 @@ public class RBLGattAttributes {
     public static String BLE_SHIELD_SERVICE = "713d0000-503e-4c75-ba94-3148f18d941e";
     public static String BLE_FREEMATICS_SERVICE = "0000ffe0-0000-1000-8000-00805f9b34fb";
     public static String BLE_FREEMATICS_CHARACTERISTIC = "0000ffe1-0000-1000-8000-00805f9b34fb";
+    public static String BLE_FREEMATICS_DEVICE = "74666F53-4D48-090E-FFE0-020300000000";
 
     static {
         // RBL Services.

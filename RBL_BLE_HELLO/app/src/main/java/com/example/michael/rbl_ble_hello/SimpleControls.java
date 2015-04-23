@@ -1,5 +1,8 @@
 package com.example.michael.rbl_ble_hello;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -18,12 +21,14 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -62,6 +67,11 @@ public class SimpleControls extends Activity {
     private static final int REQUEST_ENABLE_BT = 1;
     private static final long SCAN_PERIOD = 2000;
 
+    private Timer mOBDRequestTimer = new Timer();
+    private FileWriter mOBDlog = null;
+
+    private int throttle = 0, rpm = 0, speed = 0, load = 0;
+
     final private static char[] hexArray = { '0', '1', '2', '3', '4', '5', '6',
             '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 
@@ -98,11 +108,12 @@ public class SimpleControls extends Activity {
                 Toast.makeText(getApplicationContext(), "Connected",
                         Toast.LENGTH_SHORT).show();
 
-                getGattService(mBluetoothLeService.getSupportedGattService());
+                getGattService(mBluetoothLeService.getFreematicsGattService());
             } else if (RBLService.ACTION_DATA_AVAILABLE.equals(action)) {
                 data = intent.getByteArrayExtra(RBLService.EXTRA_DATA);
 
-                readAnalogInValue(data);
+                getOBD(data);
+                //readAnalogInValue(data);
             } else if (RBLService.ACTION_GATT_RSSI.equals(action)) {
                 displayData(intent.getStringExtra(RBLService.EXTRA_DATA));
             }
@@ -116,6 +127,7 @@ public class SimpleControls extends Activity {
         requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.main);
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         rssiValue = (TextView) findViewById(R.id.rssiValue);
 
@@ -161,6 +173,16 @@ public class SimpleControls extends Activity {
                 if (connState == false) {
                     mBluetoothLeService.connect(mDeviceAddress);
                 } else {
+                    try {
+                        if (mOBDlog != null) {
+                            mOBDlog.flush();
+                            mOBDlog.close();
+                        }
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                    mOBDlog = null;
+                    mOBDRequestTimer.cancel();
                     mBluetoothLeService.disconnect();
                     mBluetoothLeService.close();
                     setButtonDisable();
@@ -170,14 +192,28 @@ public class SimpleControls extends Activity {
 
         serTxBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+
                 // Perform action on click
                 String s = serTxValue.getText().toString();
-                byte[] buf = new byte[s.length()];
+                if (s.isEmpty()) {
+                    mOBDlog = null;
+                } else {
+                    try {
+                        File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/obdlogs/");
+                        dir.mkdir();
+                        File file = new File(dir, s + ".csv");
+                        Log.v(TAG, "Writing to: " + dir.getAbsolutePath() + "/" + s + ".csv");
+                        mOBDlog = new FileWriter(file);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                /*byte[] buf = new byte[s.length()];
                 for(int i = 0; i < s.length(); ++i) {
                     buf[i] = (byte) s.charAt(i);
                 }
                 characteristicTx.setValue(buf);
-                mBluetoothLeService.writeCharacteristic(characteristicTx);
+                mBluetoothLeService.writeCharacteristic(characteristicTx);*/
             }
         });
 
@@ -219,6 +255,63 @@ public class SimpleControls extends Activity {
         if (data != null) {
             rssiValue.setText(data);
         }
+    }
+
+    private void getOBD(byte[] data) {
+        if (data == null) {
+            Log.v(TAG, "Got null OBD data");
+            return;
+        }
+        Log.v(TAG, String.format("Got OBD data length: %d", data.length));
+
+        for (int i = 0; i < data.length; i++) {
+            if (i + 2 < data.length) {
+                // Throttle
+                if (data[i] == 't') {
+                    throttle = 0;
+                    throttle |= data[++i] & 0x000000FF;
+                    throttle <<= 8;
+                    throttle |= data[++i] & 0x000000FF;
+                }
+                // RPM
+                if (data[i] == 'r') {
+                    rpm = 0;
+                    rpm |= data[++i] & 0x000000FF;
+                    rpm <<= 8;
+                    rpm |= data[++i] & 0x000000FF;
+                }
+                // Speed
+                if (data[i] == 's') {
+                    speed = 0;
+                    speed |= data[++i] & 0x000000FF;
+                    speed <<= 8;
+                    speed |= data[++i] & 0x000000FF;
+                }
+                // Engine load
+                if (data[i] == 'l') {
+                    load = 0;
+                    load |= data[++i] & 0x000000FF;
+                    load <<= 8;
+                    load |= data[++i] & 0x000000FF;
+                }
+            }
+            if (data[i] == 'e') {
+                if (mOBDlog != null) {
+                    String logLine = String.format("%d,%d,%d,%d,%d\n", System.currentTimeMillis() / 1000L, throttle, rpm, speed, load);
+                    Log.v(TAG, "Writing to OBD log: " + logLine);
+                    try {
+                        mOBDlog.write(logLine.toCharArray());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        }
+
+        String t = new Integer(throttle).toString();
+        serRxValue.setText(t.toCharArray(), 0, t.length());
+
+
     }
 
     private void readAnalogInValue(byte[] data) {
@@ -286,13 +379,21 @@ public class SimpleControls extends Activity {
         startReadRssi();
 
         characteristicTx = gattService
-                .getCharacteristic(RBLService.UUID_BLE_SHIELD_TX);
+                .getCharacteristic(RBLService.UUID_FREEMATICS_CHARACTERISTIC);
 
         BluetoothGattCharacteristic characteristicRx = gattService
-                .getCharacteristic(RBLService.UUID_BLE_SHIELD_RX);
+                .getCharacteristic(RBLService.UUID_FREEMATICS_CHARACTERISTIC);
         mBluetoothLeService.setCharacteristicNotification(characteristicRx,
                 true);
         mBluetoothLeService.readCharacteristic(characteristicRx);
+
+        mOBDRequestTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                characteristicTx.setValue(">");
+                mBluetoothLeService.writeCharacteristic(characteristicTx);
+            }
+        }, 0, 1000);
     }
 
     private static IntentFilter makeGattUpdateIntentFilter() {
@@ -340,8 +441,9 @@ public class SimpleControls extends Activity {
                         serviceUuidBytes[j] = scanRecord[i];
                     }
                     serviceUuid = bytesToHex(serviceUuidBytes);
+                    Log.e(TAG, "{{{" + stringToUuidString(serviceUuid));
                     if (stringToUuidString(serviceUuid).equals(
-                            RBLGattAttributes.BLE_SHIELD_SERVICE
+                            RBLGattAttributes.BLE_FREEMATICS_DEVICE
                                     .toUpperCase(Locale.ENGLISH))) {
                         mDevice = device;
                     }
